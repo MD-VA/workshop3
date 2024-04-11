@@ -15,7 +15,7 @@ services:
     depends_on:
       - prometheus
     ports:
-      - 80:3000
+      - 3000:3000
     volumes:
       - ./grafana/datasources:/etc/grafana/datasources
       - ./grafana/dashboards:/var/lib/grafana/dashboards
@@ -42,3 +42,14 @@ services:
       - "--path.sysfs=/host/sys"
       - --collector.filesystem.ignored-mount-points
       - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    depends_on:
+      - grafana
+      - prometheus
+      - cadvisor
